@@ -1,0 +1,33 @@
+Instructions:
+-------------
+
+1) Please download the PedestrianCountingSystemMonthlyCountsPerHour.zip and unzip into the folder of your choice.
+
+2) Please download the data in CSV format (not included in the zip as it is too large) from https://data.melbourne.vic.gov.au/Transport/Pedestrian-Counting-System-Monthly-counts-per-hour/b2ak-trbp. 
+   Exporting it as 'CSV for Excel' would be fine and please place it in the PedestrianCountingSystemMonthlyCountsPerHour\BulkLoad\data folder.
+
+3) The solution/project was developed using Microsoft Visual Studio 2019 and SQL Server Express version 10.0.2531.0. Please make sure you have compatible versions of Microsoft Visual Studio and 
+   SQL Server installed on your machine also. SQL server 'Developer' or 'Express' edition would be fine.
+
+4) Starting with the SQL scripts please read the readme.txt file in the PedestrianCountingSystemMonthlyCountsPerHour\Sql folder. Repeating it here just in case:
+	- Please create a database in SQL Server called 'PedestrianCountingSystemDB'
+	- Then please run all the scripts in order from 1 to 4
+	- This should create the necessary tables and a stored procedure
+
+5) Please update the App.config file in the PedestrianCountingSystemMonthlyCountsPerHour\BulkLoad folder as follows:
+	- sqlServerConnection - please update this to your SQL Server connection information and database
+	- dataFilePath - please update this to your data folder with Pedestrian_Counting_System_-_Monthly__counts_per_hour.csv file your have downloaded
+	- errorFilePath - please update this to a folder where you would like to store the error log file for the ingestion of data
+	- destinationTableName - if this is different, please update this too but should be the same based on the SQL scripts you have run
+
+6) Please update appsettings.json in the PedestrianCountingSystemMonthlyCountsPerHour\DataApi folder as follows:
+	- in 'ConnectionStrings' SQLServer row, update value to your SQL Server connection information and database
+	
+7) Please open the solution and then once the projects have loaded:
+	- Set 'BulkLoad' project as a Starup project and please run it to ingest the data from the CSV file into the SQL Server table(s)
+	- To run the Data Service, please set 'DataApi' as a Starup project and run it. In the browser 2 REST API Get methods will be available:
+		- http://localhost:62755/data/ingestionStatus - this returns the status of the data ingestion (this could also be run during bulk upload)
+		- http://localhost:62755/data/averageHourlyFootfallCount - this returns the average hourly footfall count by sensor and date result in JSON format
+			- This gets calculated and returned, using a stored procedure underneath the scenes. Also this is stored in the AverageHourlyFootfall table to be available for query by other applications
+
+
